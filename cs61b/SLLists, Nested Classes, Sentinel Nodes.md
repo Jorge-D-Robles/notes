@@ -54,7 +54,7 @@ public class SLList {
 }
 ```
 
-![image-20230110120554700](/notes/cs61b/SLLists, Nested Classes, Sentinel Nodes.assets/image-20230110120554700.png)
+![image-20230110120554700](https://github.com/Jorge-D-Robles/notes/blob/main/cs61b/SLLists,%20Nested%20Classes,%20Sentinel%20Nodes.assets/image-20230110120554700.png?raw=true)
 
 ### Private vs Public
 
@@ -101,7 +101,7 @@ There is no such thing as a free lunch, but spreading the work over each add cal
 
 ### Current diagram of the linked list we have created so far
 
-![image-20230110123515652](/SLLists, Nested Classes, Sentinel Nodes.assets/image-20230110123515652.png)
+![image-20230110123515652](https://github.com/Jorge-D-Robles/notes/blob/main/cs61b/SLLists,%20Nested%20Classes,%20Sentinel%20Nodes.assets/image-20230110123515652.png?raw=true)
 
 ### Sentinel Nodes
 
@@ -109,7 +109,7 @@ There is no such thing as a free lunch, but spreading the work over each add cal
 private IntNode sentinel;
 ```
 
-![image-20230110130043979](/SLLists, Nested Classes, Sentinel Nodes.assets/image-20230110130043979.png)
+![image-20230110130043979](https://github.com/Jorge-D-Robles/notes/blob/main/cs61b/SLLists,%20Nested%20Classes,%20Sentinel%20Nodes.assets/image-20230110130043979.png?raw=true)
 
 ### Invariant
 
