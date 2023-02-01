@@ -42,7 +42,6 @@ public class animal {
         String breed; // instance variables
         String gender;
         String color;
-
         boolean neutered;
 
         // Constructor
@@ -67,5 +66,42 @@ public class animal {
 
 
 
+## Methods
+
+A cat object could tell you its breed:
+
+```java
+public String getBreed() {
+  return breed;
+}
+// run this as:
+String b = pet1.getBreed();
+```
+
+You can have your cat neutered:
+
+```java
+public void setNeutered() {
+  neutered = true;
+}
+//run as:
+pet1.setNeutered(); //sets pet1's neutered status to true
+```
 
 
+
+### String methods
+
+```java
+int length(); //gives length of string
+char charAt(int); //gives char at index int
+boolean equals(String); //compares two strings, case sensitive
+boolean equalsIgnoreCase(String); //compares two string, case insensitive
+ 
+/* To find out how many 'o' chars in a string */
+int o_count = 0;
+for(int i = 0; i < s.length(); i++) {
+  if(s.charAt(i)) 
+    o_count++;
+}
+```
