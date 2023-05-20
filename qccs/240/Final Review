@@ -1,0 +1,164 @@
+# Final Review
+
+---
+
+## 3/25 - Comparators
+
+* A == B -> !(A xor B)
+*  A < B -> !A B
+* A > B -> A !B
+
+	### 2 bit Comparator
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520121849202.png" alt="image-20230520121849202" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520122156237.png" alt="image-20230520122156237" style="zoom:67%;" />
+
+### 3 bit comparator
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520122307162.png" alt="image-20230520122307162" style="zoom:67%;" />
+
+
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520122702141.png" alt="image-20230520122702141" style="zoom:67%;" />
+
+![image-20230520123244178](/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520123244178.png)
+
+
+
+---
+
+
+
+## 3/23 - Decoders
+
+### Definition
+
+"Decodes" binary input into a line selection. Ex: 1 0 = 2, so line 2 would be on. 11 = 3, so line 3 would be on.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520123507943.png" alt="image-20230520123507943" style="zoom:67%;" />
+
+### How to build a decoder
+
+1. Find out how big you want the decoder to be, such as 2x4.
+2. Come out with the outputs, line 0, line 1, line 2, line 3, etc
+3. Add AND gates linking to each one, 00, 01, 10, 11 etc
+4. Left bit is the upper input. If you input a 0, attach a NOT to it. 1 is a straight line.
+5. Right most bit is the bottom. Same process 0, NOT. 1, straight wire.
+6. Attach the two inputs **X, Y**. The most significant bit, **X** is inputted to the top connector of each AND gate. **Y** gets wired to the *bottom.*
+
+#### Partial 3x8 Decoder
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520124657686.png" alt="image-20230520124657686" style="zoom:67%;" />
+
+### Encoder 
+
+***Definition*** Does the opposite of a decoder: takes a line number and "encodes" into a binary number. The format of an ecoder is 2^N input lines N to output lines.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520130702951.png" alt="image-20230520130702951" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520131126465.png" alt="image-20230520131126465" style="zoom:67%;" />
+
+**2 Problems**:
+
+What happens if you select L1 and L2? How do i know if L0 was selected vs nothing was selected? Both are 11. Thus, priority encoder. Prioritizes the highest lineup.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520131627737.png" alt="image-20230520131627737" style="zoom:67%;" />
+
+### Multiplexer
+
+Allow a line to be shared by several inputs. 
+
+**Note:** A multiplexer is a decoder, but with extra inputs A-D and the outputs moving into an OR gate at the end.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520135215958.png" alt="image-20230520135215958" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520135308895.png" alt="image-20230520135308895" style="zoom:67%;" />
+
+
+
+---
+
+
+
+## 03/28 - Arithmetic Logic Units, ALU
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520145516088.png" alt="image-20230520145516088" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520151426276.png" alt="image-20230520151426276" style="zoom:67%;" />
+
+---
+
+
+
+## 3/30 K-MAP
+
+For each input, K-maps double in size.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520153201357.png" alt="image-20230520153201357" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520153342350.png" alt="image-20230520153342350" style="zoom:67%;" />
+
+* **Look for groups of 2^n**
+
+* Diagonals do not count - but you can have groups overlap
+
+  ### Examples of K-Maps
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520153739473.png" alt="image-20230520153739473" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520154124526.png" alt="image-20230520154124526" style="zoom:67%;" />
+
+Note: if !A and A are both intersecting, that means that it doesn't matter if we have A, so we can simplify to 1. A + !A = 1
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520154313948.png" alt="image-20230520154313948" style="zoom:67%;" />
+
+### Boolean Expression to K-Map
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520154503790.png" alt="image-20230520154503790" style="zoom:67%;" />
+
+To figure out kmap:
+
+Start with 1 bit. draw a line, and write the reflection. Everything above the line, pad with 0, below, pad with 1.
+
+```0 0
+0 0					
+0 1
+--
+1 1
+1 0
+```
+
+For 3 bits: Write the numbers out, draw a line, pad with 0s and 1s. Start with **TWO** bits./g 
+
+``` 
+ 0 0 0 
+ 0 0 1
+ 0 1 1
+ 0 1 0
+ ---
+ 1 1 0
+ 1 1 1
+ 1 0 1
+ 1 0 0 
+```
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520155243754.png" alt="image-20230520155243754" style="zoom:67%;" />
+
+^ How a 3 input k-map would look like.
+
+### Simplifying boolean expressions to K-Map
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520160247368.png" alt="image-20230520160247368" style="zoom:67%;" />
+
+**Note - all of this reduces to !A, since it's the intersection of !A and 1**
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520160624435.png" alt="image-20230520160624435" style="zoom:67%;" />
+
+**Note - this is simplified to C**
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520161319497.png" alt="image-20230520161319497" style="zoom:67%;" />
+
+**Note: simplified to !C**
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520161619801.png" alt="image-20230520161619801" style="zoom:67%;" />

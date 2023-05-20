@@ -1,0 +1,19 @@
+# Final Review
+
+## Comparators
+
+* A == B -> !(A xor B)
+*  A < B -> !A B
+* A > B -> A !B
+
+	### 2 bit Comparator
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520121849202.png" alt="image-20230520121849202" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520122156237.png" alt="image-20230520122156237" style="zoom:67%;" />
+
+### 3 bit comparator
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520122307162.png" alt="image-20230520122307162" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240.assets/image-20230520122606514.png" alt="image-20230520122606514" style="zoom:67%;" />
