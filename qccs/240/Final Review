@@ -2,6 +2,8 @@
 
 ---
 
+# Logic Gates And Boolean Algebra
+
 ## 3/25 - Comparators
 
 * A == B -> !(A xor B)
@@ -87,6 +89,8 @@ Allow a line to be shared by several inputs.
 
 <img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520151426276.png" alt="image-20230520151426276" style="zoom:67%;" />
 
+
+
 ---
 
 
@@ -159,6 +163,959 @@ For 3 bits: Write the numbers out, draw a line, pad with 0s and 1s. Start with *
 
 <img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520161319497.png" alt="image-20230520161319497" style="zoom:67%;" />
 
-**Note: simplified to !C**
+#### BIG NOTE: YOU CAN WRAP AROUND K-MAPS AND IT COUNTS AS A GROUP. See below.
+
+
 
 <img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520161619801.png" alt="image-20230520161619801" style="zoom:67%;" />
+
+### 4 Input K-map
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520162505462.png" alt="image-20230520162505462" style="zoom:67%;" />
+
+Notice the wrap arounds, !D for sides, !B for top/bottom
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520162613755.png" alt="image-20230520162613755" style="zoom:67%;" />
+
+### 4 Input Examples
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520162910264.png" alt="image-20230520162910264" style="zoom:67%;" /><img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520163027289.png" alt="image-20230520163027289" style="zoom:67%;" />
+
+
+
+---
+
+# MIPS
+
+## 4/18 - Intro to MIPS
+
+**Definition** - Microprocessor without Interlocked Pipeline Stages
+
+Primarily used in many embedded systems such as DVRs, routers, printers.
+
+- 32 bit architecture, word size, instructions, mem addresses, registers all 32 bits.
+
+- 32 bit processors take in 32 bits at a time. 
+
+```assembly
+add $7, $5, $3 #add is the operation, 7 is destination register, 5 and 3 are source register
+#this is $7 = $5 + $3
+```
+
+**Register** is denoted by *$* and is the location in memory where things are stored. $7 is register 7, the location where the destination is. These are usually:
+
+**rs (source), rt(operand), rd (destination)**.
+
+**shamt = shift amount, or sh.**
+
+**funct: function code (specific R-format instruction)**
+
+
+
+### Decoding MIPS -> Binary
+
+**When you have binary, the instructions are 32 bits and are in the following order:**
+
+```assembly
+op rs rt rd sh func
+#instructions are in the order
+func $rd, $rs, $rt
+```
+
+
+
+This code is:
+
+```assembly
+add $7, $5, $3
+#function, rd, rs, rt
+000000 00101 00011 00111 00000 100000
+#opcode rs rt rd(destination) sh function
+```
+
+Ex 2:
+
+```assembly
+and $9, $12, $5
+000000 01100 00101 01001 000000 100100
+```
+
+### Encoding Binary -> MIPS
+
+Ex 1:
+
+```assembly
+sub $8, $13, $10
+000000 01101 01010 01000 00000 100010
+```
+
+
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520212153278.png" alt="image-20230520212153278" style="zoom: 50%;" />
+
+
+
+### R-Type vs I-Type
+
+```assembly
+add $7, $5, $3 #R-Type, $7 = $5 + $3 - adds 2 registers together
+addi $7, $5, 3 #I-Type: $7 = $5 + 3 adds register and immediate value, constant
+```
+
+I-Type Instructions
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520212800187.png" alt="image-20230520212800187" style="zoom:67%;" />
+
+**NOTE: IN THIS CASE, RT IS DESTINATION**
+
+Examples:
+
+```assembly
+andi $6, $3, 15 #op, $rt, $rs, imm
+001100 00011 00110 000...01111
+addi $10, $13, 5
+100000 01101 01010 000...101
+```
+
+
+
+### J-Type Instructions 
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520214038287.png" alt="image-20230520214038287" style="zoom:67%;" />
+
+
+
+#### Pseudo instructions
+
+Pseudoinstructions expand the MIPS instruction set but are not part of the MIPS set. They are translated into one or more MIPS instructions when translated to machine code.
+
+```assembly
+move $6, $4 = #add $6, $4, $0 -> $0 always contains value 0. Adds $4 to $0, then put result into $6
+clear $6 = #add $6, $0, $0 -> adding $0 to $0 and puts $0 into register 6
+mul $6, $5, $4 = #mult $5, $4 -> product is placed into temporary registers due to overflow, send lower 32 bits to #mflo $6, higher 32 bits would go to mfhi, but we usually don't hit mfhi (>32 bit) 
+
+```
+
+#### Memory
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520215034516.png" alt="image-20230520215034516" style="zoom:67%;" />
+
+**Big-endian format - left to right, Little-ending, right to left**
+
+#### Registers
+
+32 registers in MIPS, preceded by **$**, with two formats for addressing:
+
+1. Using register numbers $0 through $31
+2. Using equivalent names, $t1, $sp, etc
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520221125713.png" alt="image-20230520221125713" style="zoom:67%;" />
+
+
+
+---
+
+
+
+## 4/20 - MIPS Assembly Programs
+
+##### File Structure
+
+- ASCII text file, can code in any text editor
+- File type ***.ASM** 
+- Load directly into **PCSPIM**
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521103806294.png" alt="image-20230521103806294" style="zoom:67%;" />
+
+##### Program Template
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521103951696.png" alt="image-20230521103951696" style="zoom:67%;" />
+
+###### .data section
+
+* X, Y, Z are pointers. Data section initializes values inside memory, **pointing into a block of memory containing 5, 7, 9.**
+
+###### .text section
+
+* Each line of code is stored in a block of memory, so labels such as main are also **pointers to a line of code.**
+* Each program requires a **main** at the beginning of the program.
+* **Loops** are used to label certain sections of code to use gotos, loops, if statements, everything that will take  the executed line somewhere else in the code.
+* **End of program requires a blank line.**
+
+### Data Declarations
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521104425866.png" alt="image-20230521104425866" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521104734277.png" alt="image-20230521104734277" style="zoom:67%;" />
+
+#### Loading in MIPS
+
+###### Load Address
+
+ Looks at a label and returns the address it is pointing to. **Taking pointer's memory address.**
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521105103042.png" alt="image-20230521105103042" style="zoom:67%;" />
+
+##### Load Word
+
+Loads the address, then passes the address into the load word. Gives the word/value of the address.
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521105218960.png" alt="image-20230521105218960" style="zoom:67%;" />
+
+##### Load Immediate
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521105301981.png" alt="image-20230521105301981" style="zoom:67%;" />
+
+#### Sample Program using Loads
+
+```assembly
+.data
+X: .word 5
+Y: .word 7
+
+.text
+main:
+
+#load X into $s0
+la $t0, X #loads memory address of X into $t0
+lw $s0, 0($t0) #loads value stored at X into $s0
+
+#load Y into $s1
+la $t1, Y #loads memory address of Y into $t1
+lw $s1, 0($t1) #loads value stored at Y into $s1
+#note: You can re-use $t0, it is a temp register
+
+```
+
+#### Store Word
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521105643808.png" alt="image-20230521105643808" style="zoom:67%;" />
+
+#### Exercise with Store Word
+
+```assembly
+.data
+A: .word 9
+B: .word 7
+C: .space 4
+
+.text
+main:
+
+#load A into $s5
+la $t0, A #loads memory add of A to $t0
+lw $s5, 0($t0) #loads value stored at A to $s5
+#load B into $s6
+la $t1, B 
+lw $s6, 0($t1)
+#add A and B and place sum into $s7
+add $s7, $s5, $s6 #$s7 = $s5 + $s6
+#save $s7 into memory at C
+la $t2, C #loads memory address of C to $t2
+sw $s7, 0($t2) #saves value from $s7 to memory address 
+
+```
+
+
+
+---
+
+## 04/25 - System Calls
+
+**System calls** are used to communicate with the system for reading from keyboard or writing to the screen. 
+
+**System calls** require some parameter to be passed in an argument register (i.e. $a0) and service code to be passed via $v0
+
+### SYSCODES
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521195143381.png" alt="image-20230521195143381"  />
+
+
+
+**The order to do a system call is: **
+
+```assembly
+#print integer 15, note li stands for load immediate 
+li $v0, 1 #loads code 1, which is print integer into $v0. $v0 contains call code
+li $a0, 15 #loads immediate 15 into $a0
+syscall #prints 15
+
+#print character 'x' (ASCII 120)
+li $v0, 11 #load 11 (code for print char) into $v0, call code
+li $a0, 120 #load immediate 120 into $a0, 120 is ASCII for x
+syscall #prints 'x' - sees $v0 is 11, so we want to print char. sees $a0, 120, prints ascii 120
+```
+
+### Print String
+
+```assembly
+.data
+String1: .asciiz "Fried Chicken" #string1 is a pointer to a block of memory
+
+.text
+main:
+	li $v0, 4 #load 4 (Code for print STRING) into $v0
+	la $a0, String1 #load address of string1 into $a0
+	syscall #prints "Fried Chicken"
+```
+
+### Read Integer
+
+```assembly
+li $v0, 5 #load 5 (read int) to $v0
+syscall #starts capturing keyboard values into $v0 until <CR> encountered.
+add $s0, $v0, $0 #copies value from $v0 into $s0
+```
+
+### Exit Program
+
+```assembly
+li $v0, 10 #load 10 (code for Exit) into $v0
+syscall #exits program
+```
+
+### Hello World!
+
+```assembly
+.data
+str = .asciiz "Hello World" #hello world string 
+
+.text
+main: 
+	li $v0, 4 #load 4 (print string sys call) 
+	la $a0, str #loads address for str 
+	syscall #prints "Hello World"
+	li $v0, 10 #load exit code 10 
+	syscall #exit program
+```
+
+### Simple Addition Calculator
+
+```assembly
+.data 
+Str1: .asciiz "Enter first number"
+Str2: .asciiz "enter second number"
+Str3: .asciiz "The sum is:"
+
+.text
+main:
+	#print string "enter first number"
+	li $v0, 4
+	la $a0, Str1
+	syscall
+	
+	#read integer into $s0
+	li $v0, 5 #read int
+	syscall
+	add $s0, $v0, $0 
+	
+	#print "enter second number"
+	li $v0, 4 #print string
+	la $a0, Str2
+	syscall
+	#read integer into $s1
+	li $v0, 5 #read int
+	syscall
+	add $s1, $v0, $0 
+	
+	#add $s0 and $s1 into $s2
+	add $s2, $s0, $s1
+	
+	#print string "The sum is"
+	li $v0, 4
+	la $a0, Str3
+	syscall
+	
+	#print integer stored in $s2raar
+	li $v0, 1 #syscall 1 is print int
+	move $a0, $s2 #copies contents of $s2 into $a0
+	syscall
+	
+```
+
+
+
+---
+
+ ## 04/27 - Conditional Branching
+
+- By default, instructions execute sequentially
+- Conditional Branching alters the instruction sequence if certain conditions are met.
+
+**Branch on Equal, BEQ ** - branches to a specific instruction at a diff memory location when two register contains equal values
+
+**Branch Not Equal, BNE **compares if != to each other.
+
+```assembly
+#syntax
+beq reg1, reg2, label #branch equal
+bne reg1, reg2, label #branch not equal
+#if $t0==$s0 go to else
+beq $t0, $s0, else
+#if $t0 != $s0 go to else
+bne $t0, $s0, else
+```
+
+**Set on Less Than (SLT)** - Compares two contents in registers and tests if less than. **IF TRUE - RETURN 1, 0 OTHERWISE**
+
+**Set on Less than Immediate ** same as SLT, but using an immediate rather than a var.
+
+```assembly
+slt dest_reg, reg1, reg2
+#dest_reg = 1 if reg1 < reg2
+#dest_reg = 0 if reg1 >= reg2
+# < -slt immediate ->
+slti dest_Reg, reg1, imm 
+```
+
+### BRANCHING INSTRUCTIONS
+
+![image-20230523142246043](/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523142246043.png)
+
+### Unconditional Branching
+
+**Similar to "goto" in C++**
+
+**Jump -> goto**
+
+**Jump and Link** - copies the address of the next instruction into register $ra and then jumps to the address stored in LABEL
+
+**Jump Register** - Jumps to the address stored in a register
+
+```assembly
+j LABEL #syntax
+j loop #jumps to loop
+
+#<-Jump and Link ->
+#ex: pretend address of print is 3
+jal print
+#then $ra = 4, then jumps to print 
+jr $ra #jumps to $ra, which would be register 4 
+```
+
+### Exercise 1
+
+```assembly
+.data
+A: .word 8
+B: .word 3
+C: .space 4
+
+.text
+main:
+#load A into $s1
+la $t0, A
+lw $s1, 0($t0)
+#load B into $s2
+la $t0, B
+lw $s2, 0($t0)
+#if A<B goto WRITEB
+blt $s1, $s2, WRITEB
+#write A to memory at C
+la $t0, C #$t0 = address of C
+sw $s1, 0($t0) #write A to memory address at C
+#goto END
+j END
+WRITEB:
+#write B to memory at C
+la $t0, C #$t0 address of C
+sw $s2, 0($t0) #write B to memory at C
+#goto END:
+
+END:
+```
+
+### Calculator
+
+```assembly
+.data
+Str1: .asciiz "First #"
+Str2: .asciiz "2nd #"
+Str3. asciiz "Enter operation + - * /"
+
+.text
+main:
+#print String "Enter first #"
+li $v0, 4 #load 4 (Code for print STRING) into $v0
+la $a0, Str1 #load address of string1 into $a0
+syscall #prints "first number"
+
+#read int into $s0
+li $v0, 5 #read int
+syscall
+add $s0, $v0, $0 
+
+#print String into Enter 2nd
+li $v0, 4
+la $a0 Str2
+syscall
+
+#read int into $s1
+li $v0, 5
+syscall
+add $s1, $v0, $0
+
+#print string enter operaiton
+li $v0, 4
+la $a0, Str3
+syscall
+
+#read char into $s2 +(43), -(45), *(42), /(47)
+li $v0, 12 #read char
+syscall
+move $s2, $v0
+
+#if + goto ADD
+beq $s2, 43, ADD #branch eq to immediate, $s2 -> 43 ascii
+#if - goto SUB
+beq $s2, 45, SUB
+#if * goto MULT
+beq $s2, 42, MULT
+#if / goto DIV
+beq $s2, 47, DIV
+
+ADD:
+	#$s0 add $s1 into $s2
+	add $s2, $s0, $s1
+	#Print int stored in $s2
+	li $v0, 1 #1 is syscode for print INT
+	move $a0, $s2
+	syscall
+	j END
+SUB:
+	#$s0 sub $s1 into $s2
+	sub $s2, $s0, $s1
+	li $v0, 1 #1 is syscode for print INT
+	move $a0, $s2
+	syscall
+	j END
+MULT:
+	mul $s2, $s0, $s1
+	li $v0, 1 #1 is syscode for print INT
+	move $a0, $s2
+	syscall
+	j END
+DIV:
+	div $s2, $s0, $s1
+	li $v0, 1 #1 is syscode for print INT
+	move $a0, $s2
+	syscall
+	j END
+END:
+li $v0, 10 #load exit code 10 
+syscall #exit program
+```
+
+
+
+---
+
+
+
+## 05/02 - Control Structures
+
+**A control structure** determines the order in which statements are executed. 
+
+- Sequential: Default
+- Repetition: Loops
+- Selection: Choose between 2 or more paths.
+
+### If.. Then
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523150106737.png" alt="image-20230523150106737" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523150136899.png" alt="image-20230523150136899" style="zoom:67%;" />
+
+### If.. Else
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523150241377.png" alt="image-20230523150241377" style="zoom:67%;" />
+
+### While Loops
+
+1. Test condition at top
+2. if condition fails
+   1. Branch to the first instruction after the loop body.
+3. If condition passes:
+   1. continue to first instruction inside loop body
+   2. jump to top of loop
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523150430698.png" alt="image-20230523150430698" style="zoom:67%;" />
+
+### Do While Loop
+
+1. Execute Loop Body Once
+2. At end of loop body, test condition
+3. If condition passes
+   1. jump to first instruction inside loop body
+4. If condition fails
+   1. continue to next instruction outside loop body
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523150608039.png" alt="image-20230523150608039" style="zoom:67%;" />
+
+### Short Circuit Evaluation &&
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523152200564.png" alt="image-20230523152200564" style="zoom:67%;" />
+
+**Think of it as double negatives, if X < 50 == true, that means it's not >= 50, so endif**
+
+### Short Circuit Evaluation ||
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523153441103.png" alt="image-20230523153441103" style="zoom:67%;" />
+
+
+
+### Exercise - Guess a Number
+
+```assembly
+,data
+Str1: ,asciiz "Guess #"
+Str2: .asciiz "Congrats"
+Str3: .asciiz "Wrong"
+SECRET: .word 42
+
+.text
+main:
+	#load Secret into $s0
+	la $t0, SECRET 
+	lw $s0, 0($t0)
+	
+Guess: #print string "guess"
+	li $v0, 4
+	la $a0, Str1
+	syscall
+	
+	#read int input into s1
+	li $v0, 5
+	syscall
+	move $s1, $v0
+	
+	#compare input to secret, if eq, goto win
+	beq $s0, $s1, WIN
+	
+	#print wrong!
+	li $v0, 4
+	la $a0, Str3
+	syscall
+	#goto guess
+	j GUESS
+	
+WIN: #print congrats
+	li $v0, 4
+	la $a0, Str2
+	syscall
+	#End program
+	li $v0, 10
+	syscall
+```
+
+
+
+---
+
+
+
+## 5/4 - Data Structures
+
+ <img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155118395.png" alt="image-20230523155118395" style="zoom:67%;" />
+
+### Register Addressing
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155305240.png" alt="image-20230523155305240" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155332860.png" alt="image-20230523155332860" style="zoom:67%;" />
+
+### Base Displacement Addressing
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155519860.png" alt="image-20230523155519860" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155551351.png" alt="image-20230523155551351" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523155653509.png" alt="image-20230523155653509" style="zoom:67%;" />
+
+#### Long data type - 64bit value
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523160251969.png" alt="image-20230523160251969" style="zoom:67%;" />
+
+### Arrays
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523160353159.png" alt="image-20230523160353159" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523160625201.png" alt="image-20230523160625201" style="zoom:67%;" />
+
+### Stack Memory
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523160831603.png" alt="image-20230523160831603" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523160845514.png" alt="image-20230523160845514" style="zoom:67%;" />
+
+
+
+### Exercise - SumArray
+
+```assembly
+.data
+A: .word 5 4 3 2 1 #array 5,4,3,2,1
+Str: .asciiz "The sum is:"
+
+.text
+main:
+#set $s0 to beginning of A
+la $s0, A
+#(index = $s1) initialize $s1=0
+li $s1, 0
+#(Sum = $s3) initialize $s3=0
+li $s3, 0
+
+LOOP:
+#while index < 5
+slti $t0, $s1, 5 #$t0 = (index <5)?
+beq $t0, $0, ENDLOOP #if condit not met, endloop
+#load A[index] into $s2
+sll $t0 $s1, 2 #$t0 = i*4
+add $t1, $s0, $t0 #$t1 = address of a[i]
+lw $s2, 0($t1) #load a[i]
+#add $s2 to Sum
+add $s3, $s3, $s2 #s3 = s3+s2
+#increment index
+add $s1, $s1, 1 #s1 = s1 + 1
+#goto top of loop
+j LOOP
+
+ENDLOOP:
+#print str "sum is"
+li $v0, 4
+la  $a0, Str
+syscall
+#Print int stored in $s3
+li $v0, 1
+move $a0, $s3
+syscall
+```
+
+
+
+---
+
+
+
+## 5/9 Functions
+
+**jal - jump and link ** jumps to memory address indicated in the instruction label and saves the address of the next instruction into $ra ($31)
+
+**jr - jump register** - jumps to the address in the register used by this instruction.
+
+### Registers
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523164404409.png" alt="image-20230523164404409" style="zoom:67%;" />
+
+### Function Flow Control
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523164544402.png" alt="image-20230523164544402" style="zoom:67%;" />
+
+### PrintArray
+
+```assembly
+.data
+A: .word 5 4 3 2 1
+
+.text
+main:
+#set $s0 to beginning of Array A
+la $s0, A 
+#(index = $s1) initialize $s1=0
+li $s1, 0
+#(Sum = $s3) Initialize $s3=0
+li $s3, 0
+
+LOOP:
+#while index < 5
+slti $t0, $s1, 5 #t0 = (index < 5)?
+beq $t0 $0, ENDLOOP #if index =5, break
+
+#load A[index] into $a0
+sll $t0, $s1, 2 #to = 1*4
+add $t1, $s0, $t0 #t1 = address a[i]
+lw $a0, 0($t1) #load a[i]
+
+#call PRINT function
+jal PRINT
+#increment index
+addi $s1, $s1, 1 #s1=s1+1
+#goto top of loop
+j LOOP
+
+ENDLOOP:
+#end program
+li $v0, 10
+syscall
+PRINT:
+#print integer stored in $a0
+li $v0, 1
+syscall #note, a0 has already been filled in before print
+#return
+jr $ra
+```
+
+
+
+---
+
+
+
+## 5/11 Palindrome, High Low
+
+### Palindrome
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523170103750.png" alt="image-20230523170103750" style="zoom:67%;" />
+
+```assembly
+.data
+A: .word 76 73 86 69
+.text
+main:
+# Set $s0 to beginning of Array A
+La $s0, A	# $s0 = address of A
+#(index = $s1)  Initialize $s1=0
+Li $s1, 0	# $s1 = 0
+
+LOOP1:	#while index < 4
+Slti $t0, $s1, 4			# $t0 = (index < 4)?
+beq $t0, $0, ENDLOOP1		# If condition not met, break loop	
+	#load A[index] into $a0
+sll $t0, $s1, 2 		# $t0 = i * 4
+add $t1, $s0, $t0	 # $t1 = address of a[i]
+lw $a0, 0($t1) 		# load a[i]
+
+#call PRINT function
+Jal PRINT
+#increment Stack pointer
+addi $sp, $sp, -4	# $sp -=4
+#push A[index] onto stack
+sw $a0, 0($sp) 		# push $a0 onto stack.
+	
+#increment index
+Addi $s1, $s1, 1		# i++
+#goto top of LOOP1
+J LOOP1
+
+ENDLOOP1:	# Initialize $s1=0 
+Li $s1, 0	# $s1 = 0
+
+LOOP2: 	#while index < 4
+Slti $t0, $s1, 4			# $t0 = (index < 4)?
+beq $t0, $0, ENDLOOP2		# breaks loop if condition not met.
+#print character stored in top of stack via PRINT function
+Lw $a0, 0($sp)		# $a0 = character on top of stack
+Jal PRINT
+
+#decrement Stack pointer
+Addi $sp, $sp, 4		# moves stack pointer
+#increment index
+Addi $s1, $s1, 1		# i++
+#goto top of LOOP2
+J LOOP2
+
+ENDLOOP2: 
+	#end program
+	Li $v0, 10	# 10 = syscode for exit
+	syscall
+	
+PRINT:	#print character stored in $a0
+	Li $v0, 11	# 11 = syscode for PRINT Character
+	syscall
+	#return
+	Jr $ra
+
+```
+
+### HighLow
+
+```assembly
+.data
+STR1: .asciiz “Guess a number”
+STR2: .asciiz “Congratulations”
+STR3: .asciiz “Higher”
+STR4: .asciiz “Lower”
+SECRET: .word 42
+
+.text
+main:
+# Load SECRET into $s0
+La $t0, SECRET
+lw $s0, 0($t0)
+GUESS:	# Load String “Guess a number” into $a0
+La $a0, STR1
+	# Call PRINT function
+Jal PRINT
+	# Capture input into $s1
+Li $v0, 5
+syscall
+move $s1, $v0
+
+	# If SECRET = INPUT, goto WIN
+Beq $s0, $s1, WIN
+	# If SECRET < INPUT, goto LOW
+Blt $s0, $s1, LOW
+	# If SECRET > INPUT, goto HIGH
+Bgt $s0, $s1, HIGH
+
+WIN:	# Print Congratulations via function
+	La $a0, Str2
+	jal PRINT
+	# End program
+	Li $v0, 10
+	syscall
+
+HIGH:	# Print “Higher” via function
+	La $a0, STR3
+	jal PRINT
+	# Goto GUESS
+	J GUESS
+
+LOW:	# Print “Lower” via function
+	La $a0, STR4
+	jal PRINT
+	# Goto GUESS
+	J GUESS
+
+PRINT:	#print String address stored in $a0
+Li $v0, 4
+syscall
+	#return
+Jr $ra
+```
+
+
+
+---
+
+## MOST IMPORTANT CHEAT SHEETS
+
+![image-20230523142246043](/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230523142246043.png)
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230521195143381.png" alt="image-20230521195143381"  />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520212153278.png" alt="image-20230520212153278" style="zoom: 50%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520214038287.png" alt="image-20230520214038287" style="zoom:67%;" />
+
+<img src="/home/jorgerobles/repos/notes/qccs/240/Final Review.assets/image-20230520212800187.png" alt="image-20230520212800187" style="zoom:67%;" />
+
+```assembly
+add $7, $5, $3
+#function, rd, rs, rt
+000000 00101 00011 00111 00000 100000
+#opcode rs rt rd(destination) sh function
+```
+
+
+
+---
+
+### Exam 2022 Problems
+
+1. As items are push onto stack, $sp gets **B: Lower**
+2. What line will output 9? **A : la $0, X** because its adding x and y
+3. R Type - how many bits are allocated to FUNC? **D: None - should be 6**
+4. KMAP: **D cannot be reduced any more. all groups of 1** 
+5. **and **
