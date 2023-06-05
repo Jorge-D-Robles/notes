@@ -105,3 +105,7 @@ for(int i = 0; i < s.length(); i++) {
     o_count++;
 }
 ```
+
+
+
+* Note - Strings cannot be changed. They are imutable. 
